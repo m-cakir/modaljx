@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head> 
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<title>Bootstrap Ajax Modal jQuery Plugin</title>  
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="src/vendor/bootstrap/css/bootstrap.min.css">
+
+	<!--- demo.css --->
+	<link rel="stylesheet" href="src/demo.css">
+	
+</head>
+<body>
+
+	<div class="container">
+	
+		<br/>
+		
+		<a href="ajax.html" class="btn btn-default ajax-modal">Basic</a>
+		
+		<a href="ajax-stack-1.html" class="btn btn-default ajax-modal" data-modal-class="modal-wide" data-on-success="onSuccessCallback">Stack Modals</a>
+		
+		<a href="ajax.html" class="btn btn-default ajax-modal" data-modal-class="modal-wide">Add Class to Modal</a>
+		
+		<a href="ajax.html" class="btn btn-default ajax-modal" data-on-success="onSuccessCallback" data-on-close="onCloseCallback">Success & Close Callback</a>
+		
+		<a href="ajax.htmlx" class="btn btn-default ajax-modal" data-on-fail="onErrorCallback">Error Callback</a>
+		
+		<a href="ajax.html" class="btn btn-default ajax-modal" data-cacheable="true">Cacheable *true*</a>
+	
+	</div>
+	
+	
+	<!-- jQuery & Bootstrap Js -->
+	<script src="src/vendor/jquery-1.10.2.min.js"></script>
+	<script src="src/vendor/bootstrap/js/bootstrap.min.js"></script>
+		
+	<!-- Ajax Modal Plugin -->
+	<script src="src/dist/modaljx.js"></script> 
+	
+	<!-- Demo.js file -->
+	<script src="src/demo.js"></script> 
+	
+</body>
+</html>

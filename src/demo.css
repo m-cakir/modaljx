@@ -1,0 +1,11 @@
+.modal.modal-wide .modal-dialog {
+	
+	width: 85%;
+	
+}
+
+.modal-wide .modal-body {
+	
+	overflow-y: auto;
+	
+}
