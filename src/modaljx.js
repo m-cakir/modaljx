@@ -24,7 +24,7 @@
 				
                 e.preventDefault();
 				
-                that.open($(this).attr('href'));
+                that.open($(this).attr('href') || $(this).data('target'));
 				
             });
         },
@@ -33,17 +33,21 @@
 			
 			if(!Boolean(url)) {
 				
-				_log("URL cannot be null or empty!");
+				this.__log("URL cannot be empty!");
 				
 				return;
 				
 			}
 
-            this._modal = $(this._html()).appendTo('body').modal();
+			if(url.charAt(0) === '#') url = url.substr(1);
+
+			var options = this.options;
+
+			var modalOptions = options.staticBackdrop ? { backdrop: 'static', keyboard: false } : {};
+
+            this._modal = $(this._getHtml()).appendTo('body').modal(modalOptions);
 
             this._content = $(this._modal.find('.modal-dialog').html(this.options.spinner));
-			
-			var options = this.options;
 			
             this._modal.on('shown.bs.modal', function () {
 
@@ -83,11 +87,17 @@
 				
             });
 			
-			this._ajax(url);
+			this.__ajax(url);
 			
 		},
+
+		hide : function () {
+
+			if(this._modal) this._modal.modal('hide');
+
+		},
 		
-		_ajax : function(url){
+		__ajax : function(url){
 			
 			var options = this.options;
 			
@@ -101,9 +111,9 @@
                 
 				url     	: url,
                 
-				data    	: this._data(),
-				
-				statusCode 	: options.ajax.statusCode
+				data    	: this._getData(),
+
+				beforeSend 	: options.ajax.beforeSend
 				
             }).done(function(response, status, xhr){
 				
@@ -121,7 +131,7 @@
 				
             }).fail(function() {
 				
-				modal.modal('hide');
+				if(options.canHideOnFail) modal.modal('hide');
 
                 if(typeof window[options.onFail] === 'function') {
                 
@@ -133,20 +143,20 @@
 			
 		},
 		
-		_data : function(){
+		_getData : function(){
 			
 			var data = {};
 			
 			if(!this.options.cacheable){
 				
-				data.r = this._random(100, 999999999);
+				data.r = this.__random(100, 999999999);
 				
 			}
 			
 			return data;
 		},
 
-        _html : function(){
+        _getHtml : function(){
 
             var count = 0;
 
@@ -161,14 +171,14 @@
                     '</div>'].join('');
         },
 
-        _random : function (m, n) {
+        __random : function (m, n) {
 			
             m = parseInt(m); n = parseInt(n);
 			
             return Math.floor( Math.random() * (n - m + 1) ) + m;
         },
 		
-		_log : function(txt){
+		__log : function(txt){
 			
 			if(typeof console === 'undefined') return;
 			
@@ -186,18 +196,20 @@
         return this.each(function () {
             var that = $(this),
                 data = that.data('modaljx');
-				
-		//	if(!that.is('a')) return;	
 
             if (!data) that.data('modaljx', (data = new BSModalAjax(this, option)));
-        //    if (typeof option === 'string') data[option].apply(data, [].concat(args));
+            if (typeof option === 'string' && /open|hide/.test(option)) data[option].apply(data, [].concat(args));
         });
 	
     };
 
     $.fn.modaljx.defaults = {
 		
-		cacheable	: false,	
+		cacheable	: false,
+
+		canHideOnFail : false,
+
+		staticBackdrop : false,
         
 		modalClass	: '',	
 		
@@ -206,16 +218,8 @@
 		ajax 		: {
 				
 			type : 'GET', // or POST
-			
-			statusCode	: {
-				
-				404	: function() {
-					
-					alert("Page not found!");
-				  
-				}
-				
-			}
+
+			beforeSend : function () {}
 				
 		},
 				
@@ -227,7 +231,5 @@
 		
 		onClose		: function(){}
     };
-
-    $.fn.modaljx.Constructor = BSModalAjax;
 
 }(jQuery));
